@@ -143,3 +143,16 @@ Se consideraron los siguientes módulos:
 | VIAHRS     | time(6)     |                 |
 | VIAFCH     | date        |                 |
 | COSVIA     | decimal(8,1)|                 |
+
+
+## Contacto y Colaboración
+
+Si deseas contribuir con mejoras o agregar nuevas funcionalidades a este sistema, siéntete libre de hacer un fork del proyecto y enviar un pull request con tus cambios. También puedes escribirme directamente para coordinar mejoras o solicitar un desarrollo más personalizado.
+
+📩 **Correo Electrónico:** [ronald.ramos.malca.30@gmail.com](mailto:ronald.ramos.malca.30@gmail.com)
+
+🔗 **GitHub:** [https://github.com/ronaldbit](https://github.com/ronaldbit)
+
+## Derechos de Autor
+
+© 2024. Todos los derechos reservados. Este proyecto es de código abierto y puede ser utilizado y modificado bajo los términos de la licencia correspondiente. Se agradece el reconocimiento y la atribución adecuada en caso de uso o modificación.
