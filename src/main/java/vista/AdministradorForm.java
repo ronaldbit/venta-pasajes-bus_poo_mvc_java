@@ -1,0 +1,789 @@
+
+package vista;
+
+
+import controlador.AdminControlador;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import controlador.NuevoViajeControlador;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Santiago
+ */
+public class AdministradorForm extends javax.swing.JFrame {
+
+
+    private String rutaImagen = null;
+    private AdminControlador choferController;
+    private NuevoViajeControlador viajeController;
+    public AdministradorForm() {
+        initComponents();
+        setLocationRelativeTo(null);
+        viajeController = new NuevoViajeControlador();
+
+        // Cargar rutas y buses en los combo box
+        viajeController.cargarRutasEnCombo(cmbRuta);
+        viajeController.cargarBusesEnCombo(cmbBus);
+
+        // Ocultar el panel de agregar bus al inicio
+        panelAgregarBus.setVisible(false);
+        choferController = new AdminControlador();
+
+        choferController.cargarChoferesEnCombo(cmbChofer);
+
+        DefaultTableModel model = (DefaultTableModel) tblViajes.getModel();
+        choferController.cargarDatosViajes(model);
+
+        cmbChofer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbChoferActionPerformed(evt);
+            }
+        });
+    
+        choferController = new AdminControlador();
+
+        String nuevoCodigo = choferController.generarNuevoCodigo();
+        txtCodigo.setText(nuevoCodigo);
+        txtCodigo.setEditable(false);
+
+        txtFechaRegistro.setText(choferController.getFechaActual());
+
+        cargarDatosChoferes();
+        cargarDatosViajes();
+
+        tblChoferes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    cargarImagenDesdeTabla();
+                }
+            }
+        });
+    }
+    
+    private void cargarImagenDesdeTabla() {
+        int filaSeleccionada = tblChoferes.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            String codigo = tblChoferes.getValueAt(filaSeleccionada, 0).toString();
+            String rutaImagen = choferController.obtenerRutaImagenes() + "/" + codigo + ".jpg";
+            File archivoImagen = new File(rutaImagen);
+
+            if (archivoImagen.exists()) {
+                ImageIcon icono = new ImageIcon(rutaImagen);
+                Image imagen = icono.getImage().getScaledInstance(lblImagenLista.getWidth(), lblImagenLista.getHeight(), Image.SCALE_SMOOTH);
+                lblImagenLista.setIcon(new ImageIcon(imagen));
+            } else {
+                String rutaSinFoto = choferController.obtenerRutaImagenes() + "/sin_foto.jpg";
+                File archivoSinFoto = new File(rutaSinFoto);
+
+                if (archivoSinFoto.exists()) {
+                    ImageIcon iconoSinFoto = new ImageIcon(rutaSinFoto);
+                    Image imagenSinFoto = iconoSinFoto.getImage().getScaledInstance(lblImagenLista.getWidth(), lblImagenLista.getHeight(), Image.SCALE_SMOOTH);
+                    lblImagenLista.setIcon(new ImageIcon(imagenSinFoto));
+                } else {
+                    lblImagenLista.setIcon(null);
+                }
+            }
+        }
+    }
+
+    private void cargarImagen() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Imágenes JPG", "jpg", "jpeg");
+        fileChooser.setFileFilter(filtro);
+
+        int resultado = fileChooser.showOpenDialog(null);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+            rutaImagen = archivo.getAbsolutePath();
+
+            ImageIcon icono = new ImageIcon(rutaImagen);
+            Image imagen = icono.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_SMOOTH);
+            lblImagen.setIcon(new ImageIcon(imagen));
+        }
+    }
+
+    private void cargarDatosViajes() {
+        DefaultTableModel model = (DefaultTableModel) tblViajes.getModel();
+        choferController.cargarDatosViajes(model);
+    }
+
+    private void cargarDatosChoferes() {
+        DefaultTableModel model = (DefaultTableModel) tblChoferes.getModel();
+        choferController.cargarDatosChoferes(model);
+    }
+
+
+
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblChoferes = new javax.swing.JTable();
+        lblImagenLista = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        tblViajesCont = new javax.swing.JScrollPane();
+        tblViajes = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        cmbChofer = new javax.swing.JComboBox<>();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtFechaRegistro = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        rbSemiprofesional = new javax.swing.JRadioButton();
+        rbProfesional = new javax.swing.JRadioButton();
+        jLabel3 = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        txtSalario = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        lblImagen = new javax.swing.JLabel();
+        btnCargarImagen = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        panelAgregarBus = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        txtBusCapacidad = new javax.swing.JTextField();
+        txtBusPlaca = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        btnGuardar1 = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        txtHora = new javax.swing.JTextField();
+        txtFecha = new javax.swing.JFormattedTextField();
+        cmbBus = new javax.swing.JComboBox<>();
+        cmbRuta = new javax.swing.JComboBox<>();
+        lblRutaCodigo = new javax.swing.JLabel();
+        lblRutaNombre = new javax.swing.JLabel();
+        lblRutaCosto = new javax.swing.JLabel();
+        lblBus = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("PERÚBUSS - Admistrador");
+
+        tblChoferes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Código", "Nombre", "Fecha Ingreso", "Categoría", "Salario"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblChoferes);
+
+        lblImagenLista.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(lblImagenLista, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addComponent(lblImagenLista, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(186, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("LISTA", jPanel1);
+
+        tblViajes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Código Viaje", "Número Bus", "Código Ruta", "Código Chofer", "Fecha Salida", "Hora Salida", "Hora Llegada"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblViajesCont.setViewportView(tblViajes);
+
+        jLabel6.setText("Viajes realizados por chofer:");
+
+        cmbChofer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Juan", "etc", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbChofer, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tblViajesCont, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE))
+                .addGap(18, 18, 18))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cmbChofer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(tblViajesCont, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
+        );
+
+        jTabbedPane1.addTab("VIAJES", jPanel2);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Datos del chofer", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
+
+        jLabel1.setText("Nombre:");
+
+        jLabel2.setText("Fecha de Registro: ");
+
+        rbSemiprofesional.setText("Semiprofesional");
+
+        rbProfesional.setText("Profesional");
+
+        jLabel3.setText("Categoría:");
+
+        btnGuardar.setText("Guardar Chofer");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Salario:");
+
+        txtCodigo.setEditable(false);
+        txtCodigo.setText("Codigo");
+
+        jLabel5.setText("Código:");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btnGuardar)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(rbProfesional)
+                                .addGap(38, 38, 38)
+                                .addComponent(rbSemiprofesional))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel1)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(0, 0, 0)
+                                        .addComponent(jLabel5)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                                    .addComponent(txtFechaRegistro, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtSalario, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.LEADING))))
+                        .addContainerGap(56, Short.MAX_VALUE))))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFechaRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbSemiprofesional)
+                    .addComponent(rbProfesional)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addComponent(btnGuardar)
+                .addGap(19, 19, 19))
+        );
+
+        lblImagen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnCargarImagen.setText("Cargar Imagen");
+        btnCargarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarImagenActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(81, 81, 81)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnCargarImagen)
+                    .addComponent(lblImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(90, 90, 90))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(lblImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCargarImagen))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("REGISTRAR CHOFER", jPanel3);
+
+        panelAgregarBus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Nuevo Bus"));
+
+        jLabel7.setText("Capacidad");
+
+        txtBusCapacidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBusCapacidadActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Placa");
+
+        javax.swing.GroupLayout panelAgregarBusLayout = new javax.swing.GroupLayout(panelAgregarBus);
+        panelAgregarBus.setLayout(panelAgregarBusLayout);
+        panelAgregarBusLayout.setHorizontalGroup(
+            panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 305, Short.MAX_VALUE)
+            .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelAgregarBusLayout.createSequentialGroup()
+                    .addGap(31, 31, 31)
+                    .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel7))
+                    .addGap(76, 76, 76)
+                    .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBusPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBusCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(31, Short.MAX_VALUE)))
+        );
+        panelAgregarBusLayout.setVerticalGroup(
+            panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 190, Short.MAX_VALUE)
+            .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelAgregarBusLayout.createSequentialGroup()
+                    .addGap(51, 51, 51)
+                    .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(txtBusPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8))
+                    .addGap(18, 18, 18)
+                    .addGroup(panelAgregarBusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtBusCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7))
+                    .addContainerGap(53, Short.MAX_VALUE)))
+        );
+
+        btnGuardar1.setText("GUARDAR");
+        btnGuardar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardar1ActionPerformed(evt);
+            }
+        });
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Nuevo Viaje"));
+
+        txtHora.setToolTipText("HH:MM:SS");
+
+        txtFecha.setToolTipText("YYYY-MM-DD");
+
+        cmbBus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbBus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBusActionPerformed(evt);
+            }
+        });
+
+        cmbRuta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        lblRutaCodigo.setText("Ruta");
+
+        lblRutaNombre.setText("Bus");
+
+        lblRutaCosto.setText("Fecha");
+
+        lblBus.setText("Hora");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblRutaCodigo)
+                    .addComponent(lblRutaNombre)
+                    .addComponent(lblRutaCosto)
+                    .addComponent(lblBus))
+                .addGap(78, 78, 78)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtFecha)
+                    .addComponent(cmbBus, 0, 136, Short.MAX_VALUE)
+                    .addComponent(cmbRuta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtHora))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRutaCodigo)
+                    .addComponent(cmbRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRutaNombre)
+                    .addComponent(cmbBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRutaCosto)
+                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblBus)
+                    .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(btnGuardar1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                        .addComponent(panelAgregarBus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49))))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelAgregarBus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addComponent(btnGuardar1)
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("REGISTRAR VIAJE", jPanel5);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1)
+                .addGap(0, 0, 0))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // Obtener los valores de los campos de la interfaz
+        String codigo = txtCodigo.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String fechaRegistro = txtFechaRegistro.getText().trim();
+        String categoria = rbProfesional.isSelected() ? "P" : (rbSemiprofesional.isSelected() ? "S" : null);
+        String salarioTexto = txtSalario.getText().trim();
+
+        // Validar que todos los campos estén completos
+        if (nombre.isEmpty() || fechaRegistro.isEmpty() || categoria == null || salarioTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos obligatorios.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar que el salario sea un número válido
+        double salario;
+        try {
+            salario = Double.parseDouble(salarioTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El salario debe ser un número válido.", "Error en el salario", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Llamar al método guardarChofer del controlador
+        choferController.guardarChofer(codigo, nombre, fechaRegistro, categoria, salario, rutaImagen);
+
+        // Limpiar los campos después de guardar
+        limpiarCampos();
+
+        // Generar y mostrar un nuevo código para el próximo chofer
+        String nuevoCodigo = choferController.generarNuevoCodigo();
+        txtCodigo.setText(nuevoCodigo);
+
+        // Recargar la tabla de choferes
+        cargarDatosChoferes();
+
+
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtFechaRegistro.setText(choferController.getFechaActual());
+        rbProfesional.setSelected(true); // Seleccionar Profesional por defecto
+        txtSalario.setText("");
+        lblImagen.setIcon(null);
+        rutaImagen = null;
+    }
+
+    
+    private void cmbChoferActionPerformed(java.awt.event.ActionEvent evt) {
+        String seleccion = (String) cmbChofer.getSelectedItem();
+
+        String codigoChofer = null;
+        if (seleccion != null && !seleccion.equals("Seleccione un chofer")) {
+            codigoChofer = seleccion.split(" - ")[1];
+        }
+
+        DefaultTableModel model = (DefaultTableModel) tblViajes.getModel();
+        choferController.filtrarViajesPorChofer(model, codigoChofer);
+    }
+    
+    private void btnCargarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarImagenActionPerformed
+        cargarImagen();
+    }//GEN-LAST:event_btnCargarImagenActionPerformed
+
+    private void cmbBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusActionPerformed
+        String seleccion = (String) cmbBus.getSelectedItem();
+        if (seleccion != null && seleccion.equals("Agregar nuevo bus")) {
+            panelAgregarBus.setVisible(true); // Mostrar el panel para agregar nuevo bus
+        } else {
+            panelAgregarBus.setVisible(false); // Ocultar el panel
+        }
+    }//GEN-LAST:event_cmbBusActionPerformed
+
+    private void txtBusCapacidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusCapacidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBusCapacidadActionPerformed
+
+    private void btnGuardar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar1ActionPerformed
+        String rutaSeleccionada = (String) cmbRuta.getSelectedItem();
+        String busSeleccionado = (String) cmbBus.getSelectedItem();
+        String fecha = txtFecha.getText().trim();
+        String hora = txtHora.getText().trim();
+
+        // Validar campos comunes
+        if (rutaSeleccionada == null || rutaSeleccionada.equals("Seleccione una ruta")) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una ruta.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (fecha.isEmpty() || hora.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete la fecha y la hora.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String codigoRuta = rutaSeleccionada.split(" - ")[0];
+
+        if (busSeleccionado != null && busSeleccionado.equals("Agregar nuevo bus")) {
+            String placa = txtBusPlaca.getText().trim();
+            String capacidadTexto = txtBusCapacidad.getText().trim();
+
+            if (placa.isEmpty() || capacidadTexto.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del bus.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int capacidad;
+            try {
+                capacidad = Integer.parseInt(capacidadTexto);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "La capacidad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            viajeController.insertarBus(placa, capacidad);
+
+            viajeController.cargarBusesEnCombo(cmbBus);
+
+            panelAgregarBus.setVisible(false);
+        } else if (busSeleccionado == null || busSeleccionado.equals("Seleccione un bus")) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un bus.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            int numeroBus = Integer.parseInt(busSeleccionado.split(" - ")[0]);
+
+            viajeController.insertarViaje(codigoRuta, numeroBus, fecha, hora, 70.0, "C007"); // El costo puede ser ajustado
+            cargarDatosViajes();
+        }
+    }//GEN-LAST:event_btnGuardar1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AdministradorForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdministradorForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdministradorForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdministradorForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AdministradorForm().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCargarImagen;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnGuardar1;
+    private javax.swing.JComboBox<String> cmbBus;
+    private javax.swing.JComboBox<String> cmbChofer;
+    private javax.swing.JComboBox<String> cmbRuta;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblBus;
+    private javax.swing.JLabel lblImagen;
+    private javax.swing.JLabel lblImagenLista;
+    private javax.swing.JLabel lblRutaCodigo;
+    private javax.swing.JLabel lblRutaCosto;
+    private javax.swing.JLabel lblRutaNombre;
+    private javax.swing.JPanel panelAgregarBus;
+    private javax.swing.JRadioButton rbProfesional;
+    private javax.swing.JRadioButton rbSemiprofesional;
+    private javax.swing.JTable tblChoferes;
+    private javax.swing.JTable tblViajes;
+    private javax.swing.JScrollPane tblViajesCont;
+    private javax.swing.JTextField txtBusCapacidad;
+    private javax.swing.JTextField txtBusPlaca;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JFormattedTextField txtFecha;
+    private javax.swing.JTextField txtFechaRegistro;
+    private javax.swing.JTextField txtHora;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtSalario;
+    // End of variables declaration//GEN-END:variables
+}
