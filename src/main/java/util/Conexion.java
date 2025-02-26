@@ -6,9 +6,15 @@ import java.sql.SQLException;
 
 public class Conexion { 
     
-    private static final String URL = "jdbc:mysql://193.203.166.156:3306/u266581275_utp_poo?autoReconnect=true&useSSL=false";
-    private static final String USER = "u266581275_utp_poo";
-    private static final String PASSWORD = "w/P4wkpb";
+    /* conectarse a una base de datos de un servidor. Cambiar ip a la de tu servidor.
+    private static final String URL = "jdbc:mysql://193.203.166.156:3306/nombreDeLaBaseDeDatos?autoReconnect=true&useSSL=false";
+    private static final String USER = "nombreDeLaBaseDeDatos";
+    private static final String PASSWORD = "contraseñaDeLaBaseDeDatos"; */
+
+    // Conexion localmente.
+    private static final String URL = "jdbc:mysql://localhost:3306/tu_base_de_datos?autoReconnect=true&useSSL=false";
+    private static final String USER = "root"; // Usuario por defecto en WampServer
+    private static final String PASSWORD = ""; // La contraseña suele estar vacía por defecto en WampServer
    
     // Método estático para obtener la conexión
     public static Connection getConnection() {
